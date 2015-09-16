@@ -1,0 +1,152 @@
+#link {
+	border:0px solid #6C6a6A;
+	border-bottom:0px;
+	color: #ffffef;
+	background: #404040;
+	padding-right:1em; 
+	padding-bottom:0.5em; 
+}
+#link a{
+	color: #ffffef;
+	text-decoration: none;
+}
+#link a:hover{
+	text-decoration: underline;
+}
+#header {
+background: #404040;
+border:1px solid #6C6a6A;
+border-top:0px;
+color: #ffffef;
+height:10em;text-align:bottom;
+padding-left:0.4em;
+padding-top:1em;
+ 
+}
+
+#haut {
+background:#6C6a6A;
+height:8px;
+border-bottom:1px solid #636161;
+position: relative;
+top: 5px;
+}
+
+#header label{
+font-size:2em;
+}
+#subtitle {
+	font-size: 0.6em;
+	color:#bbb;
+	text-align:top; 
+	margin-top:0.5em;
+	margin-bottom:2em;
+}
+#centre {
+	border:1px solid #6C6a6A;
+	border-bottom:0;
+	color:#333333;
+	padding:1.5em;
+	background-color: #FFFFFF;
+	position: relative;
+    top: 10px;
+        
+}
+
+#conteneur {
+background-color:#fafafa;
+margin:0em 1%;
+min-width:60em;
+position:absolute;
+width:80%;
+}
+
+
+
+
+#pied {
+border:1px solid #202020;
+border-top:0;
+padding:0.5em;
+text-align:right;
+}
+
+.menuhaut {
+font-size:1em;
+list-style-type:none;
+margin:0;
+padding:0;
+}
+
+.menuhaut a {
+color:#fafafa;
+margin:0 0.4em;
+text-decoration:none;
+}
+
+.menuhaut a:hover {
+color:#FF0;
+text-decoration:none;
+}
+
+.menuhaut li {
+border-right:1px solid #fff;
+display:inline;
+float:left;
+margin:0;
+padding:0.6em 10px;
+}
+
+a {
+color:#333333;
+text-decoration: underline;
+}
+
+body {
+background-color:#ffffff;
+font-family:Verdana, Arial, Helvetica, sans-serif;
+font-size:0.75em;
+background: #6C7C8B url("../images/background.png") repeat-x;
+}
+
+h1 {
+font-size:1.6em;
+margin:0.5em 0.5em 1em 0;
+}
+
+h2 {
+font-size:1.2em;
+margin:0.8em 0.5em 0.3em 0.6em;
+}
+
+h3 {
+font-size:1.1em;
+margin:0.8em 0.5em 0.3em 0.8em;
+}
+
+h4 {
+font-size:1em;
+margin:0.7em 0.5em 0.3em 1em;
+}
+
+h5 {
+font-size:0.9em;
+margin:0.6em 0.5em 0.2em 1.5em;
+}
+
+p {
+margin:1px 0.5em 0.5em 1.5em;
+}
+pre {
+	font-family: "Courier New", Courier, mono;
+	background-color: #CCCCCC;
+	font-size: 12px;
+	padding: 10px;
+
+
+}
+
+.screenshot {
+	width: 90%;
+	border: 0;
+}

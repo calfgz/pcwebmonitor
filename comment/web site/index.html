@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+<title>Jwebap</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<div id="conteneur">
+
+
+<div id="header">
+<img  width="350px" height="100px"  src="images/Logo.png" style="float:left"/> 
+<div id="link" align="right" >
+<a href='index_zh.html'>Chinese</a>|<a href='index.html'>English</a>|<a href="http://sourceforge.net/project/showfiles.php?group_id=210919">Download</a>
+</div>
+
+</div>
+
+<div id="haut"></div>
+
+<div id="centre">
+<h1>Introduction</h1>
+<p>
+Jwebap is an open-source profiler tool for j2ee application. It is pure java-based and working on any computer with jdk 1.4 and up. It is also very easy to use because it only launches two files. Following are some of its features:
+</p>
+<p>
+<br/>
+<strong>High Performance:</strong> Jwebap uses ASM (A Java bytecode engineering library) to inject class to achieve runtime information. The function is very low-overhead.And now it is deployed in some China Telecom product systems with ten Millions users.
+</p>
+<p>
+<br/>
+<strong>Pure Java:</strong> Most profilers use the JVMPI (Java Virtual Machine Profiling Interface) and some localized interface to monitor runtime details inside JVM. However, Jwebap is written entirely in java. It has no dependency on JVM or OS. So you can easily deploy it in any platform with very low-overhead.
+</p>
+<p>
+<br/>
+<strong>Plugin Architecture:</strong> Jwebap is based on a plug-in architecture. Every trace analysis tool is a component. You can configure what component you should use. You can do timing filter on method execution, database statement, http request, etc. You can also view the leak connections, view the heap stack in execution, and count average execution time, over-time rate, etc. A component can be extended easily under the plug-in architecture, so Jwebap can implement more analysis components and reports in the future.
+</p>
+<p>
+<br/>
+<strong>Easy To Use:</strong> When you use Jwebap, you will find it is easy to use. It has simple configure file, web console, and helpful analysis report.
+</p>
+<p>
+<br/>
+You can <a href="http://sourceforge.net/project/showfiles.php?group_id=210919" style='text-decoration:underline;'>download it here</a>
+</p>
+<h1>How to use?</h1>
+<p>
+<br/>
+<h2>Step I: 	deploy jarfiles</h2>
+<br/>
+Include jwebap.jar and it’s dependency libraries to your application classes path. It is generally ‘WEB-INF/lib/’ if your application is just a web module, or the server lib path if your application is an EJB application with EAR .
+</p>
+<p>
+<br/>
+<h2>Step II:		configure</h2>
+</p>
+<p>
+<br/>
+And then change your web.xml:
+</p>
+<p>
+<br/>Add context-param to locate jwebap.xml
+</p>
+<pre>
+&lt;context-param&gt;
+	&lt;param-name&gt;jwebap-config&lt;/param-name&gt;
+	&lt;param-value&gt;/WEB-INF/jwebap.xml&lt;/param-value&gt;
+&lt;/context-param&gt;
+</pre>
+<p>
+<br/>Add Jwebap start listener at the first of all listeners
+</p>
+<pre>
+&lt;listener&gt;	
+	&lt;listener-class&gt;org.jwebap.startup.JwebapListener&lt;/listener-class&gt;	
+&lt;/listener&gt;
+</pre>
+<p>
+<br/>Add http filter for HttpComponent
+</p>
+<pre>
+&lt;filter&gt;
+	&lt;filter-name&gt;PageDetectFilter&lt;/filter-name&gt;
+	&lt;filter-class&gt;org.jwebap.plugin.tracer.http.DetectFilter&lt;/filter-class&gt;
+	&lt;init-param&gt;
+		&lt;param-name&gt;excludeUrls&lt;/param-name&gt;
+		&lt;param-value&gt;/detect;/detect/*;*.js;*.jpg;*.htm;*.html;*.gif;*.png;*.css;*.swf&lt;/param-value&gt;
+	&lt;/init-param&gt;
+&lt;/filter&gt;
+&lt;filter-mapping&gt;
+	&lt;filter-name&gt;PageDetectFilter&lt;/filter-name&gt;
+	&lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;
+</pre>
+<p>
+<br/>Add Servlet for Jwebap console
+</p>
+<pre>
+&lt;servlet&gt;
+	&lt;servlet-name&gt;detect&lt;/servlet-name&gt;
+	&lt;servlet-class&gt;org.jwebap.ui.controler.JwebapServlet&lt;/servlet-class&gt;	
+&lt;/servlet&gt;
+&lt;servlet-mapping&gt;
+	&lt;servlet-name&gt;detect&lt;/servlet-name&gt;
+	&lt;url-pattern&gt;/detect/*&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+</pre>
+
+<p>
+<br/>
+<h2>Step III:	lanunch jwebap!</h2>
+</p>
+<p>
+<br/>
+Lanunch tracer.jar in your application classes path(the default plugin in jwebap defined in jwebap.xml plugin-ref tag) Now ,startup your application ! if you config correctly ,you can access JwebapServlet to see the Jwebap Console .
+</p> 
+<p>
+<br/>
+<h2>Step IV:	config tracer-plugin</h2>
+</p>
+<p>
+<br/>
+When you see the jwebap console ,that’s not enough . We have not any plugin in it . Next, we should deploy plugins in jwebap console.
+</p>
+<a href='images/deploy.jpg'><img src='images/deploy.jpg' class='screenshot'/></a>
+<p>
+<br/>
+Jwebap implement a default plugin ‘tracer’. It has been deployed default when jwebap startup. So,we can see it in jwebap console deployplugins. And then ,we should modify some parameter with this plugin.
+</p>
+<p>
+<br/>
+Click ‘Tracer’ , and choice component which you will config, here has three component :
+</p>
+
+<p>
+<br/><strong>HttpComponent</strong>
+</p>
+<pre>
+&lt;component name="HttpComponent" type="org.jwebap.plugin.http.HttpComponent"&gt;
+	<font color=green>&lt;!--(ms) timings filter's over time --&gt;</font>
+	&lt;property name='trace-filter-active-time'&gt;-1&lt;/property&gt;
+	<font color=green>&lt;!-- max over-time trace size --&gt;</font>
+	&lt;property name='trace-max-size'&gt;1000&lt;/property&gt;
+&lt;/component&gt;
+</pre>
+
+<p>
+<br/><strong>MethodComponent</strong>
+</p>
+<pre>
+&lt;component name="MethodComponent" type="org.jwebap.plugin.method.MethodComponent"&gt;
+	&lt;property name='trace-filter-active-time'&gt;-1&lt;/property&gt;
+	&lt;property name='trace-max-size'&gt;1000&lt;/property&gt;
+	<font color=green>&lt;!--
+		package name and class name that monitored by MethodComponent,
+		e.g.: 'test.*;test.Test' , divided by ';'
+	--&gt;</font>
+	&lt;property name='detect-clazzs'&gt;test.*;&lt;/property&gt;
+&lt;/component&gt;
+</pre>
+
+<p>
+<br/><strong>JdbcComponent</strong>
+</p>
+<pre>
+&lt;component name="JdbcComponent" type="org.jwebap.plugin.jdbc.JdbcComponent"&gt;
+	&lt;property name='trace-filter-active-time'&gt;-1&lt;/property&gt;
+	&lt;property name='trace-max-size'&gt;1300&lt;/property&gt;
+	&lt;property name='connection-listener'&gt;<font color=green>&lt;!--Connection Listener--&gt;</font>
+	org.jwebap.plugin.http.ServletOpenedConnectionListener;
+	org.jwebap.plugin.method.MethodOpenedConnectionListener
+	&lt;/property&gt;
+	<font color=green>&lt;!--
+			1)Local datasource: set your ConnectionManagerClass,
+			or the connection pool 's datasource.  If you have 
+			more than one class ,divided by ';'.
+			c3p0:com.mchange.v2.c3p0.ComboPooledDataSource; 
+			dbcp: org.apache.commons.dbcp.BasicDataSource
+			Also,other class. Jwebap will inject driver-clazzs,and detect any 
+			connection and datasource object it's method renturn.
+			Note:  'driver-clazzs =jdbc driver' is deprecated. Beacause of connection
+			pool, set 'driver-clazzs =jdbc driver', jwebap will find out all connection is leaked.
+			2)JNDI datasource: If your application uses jndi datasource,
+			you can set the class which manages connections in your 
+			application as driver,e.g.: 'com.china.telecom.ConnectionManager'.
+			Else if you use spring to get jndi datasource ,you also can set 
+			driver-clazzs=org.springframework.jndi.JndiObjectFactoryBean.
+			JdbcComponent will inject this class to proxy all connection the class's method return.
+		
+	--&gt;</font>
+	&lt;property name='driver-clazzs'&gt;&lt;/property&gt;
+&lt;/component&gt;
+</pre>
+
+<h1>ScreenShots</h1>
+<p>
+<br/><strong>Jdbc Traces</strong><br/>
+<a href='images/jwebap-jdbc-1.jpg'><img src='images/jwebap-jdbc-1.jpg' class='screenshot' /></a>
+<a href='images/jwebap-jdbc-2.jpg'><img src='images/jwebap-jdbc-2.jpg' class='screenshot' /></a>
+
+<br/><strong>Method Traces</strong><br/>
+<a href='images/jwebap-method.jpg'><img src='images/jwebap-method.jpg' class='screenshot'/></a>
+<p>
+
+<br/><strong>Http Traces</strong><br/>
+<a href='images/jwebap-http.jpg'><img src='images/jwebap-http.jpg' class='screenshot' /></a>
+
+<br/><strong>Deploy</strong><br/>
+<a href='images/deploy.jpg'><img src='images/deploy.jpg' class='screenshot' /></a>
+
+<p align=right>
+<br>
+Please use
+<a href="http://sourceforge.net/forum/?group_id=210919">SourceForge forum</a>
+for reporting any bug, comment or suggestion.
+<br/><br/>
+Power by<a target="_blank" href="http://sourceforge.net" target="_blank"><img src="images/sourceforge.jpg" border="0" /></a>
+
+</p>
+</div>
+
+<!--
+<div id="pied">java.sizeOf is a project of <a href="http://www.incodice.it">InCodice</a> - Design by <a href="http://nicolas.freezee.org">Nicolas Fafchamps</a></div>
+-->
+</div>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+<title>Jwebap</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<div id="conteneur">
+
+
+<div id="header">
+<img  width="350px" height="100px"  src="images/Logo.png" style="float:left"/> 
+<div id="link" align="right" >
+<a href='index_zh.html'>中文</a>|<a href='index.html'>English</a>|<a href="http://sourceforge.net/project/showfiles.php?group_id=210919">Download</a>
+</div>
+
+</div>
+
+<div id="haut"></div>
+
+<div id="centre">
+<h1>介绍</h1>
+<p> 
+Jwebap是一个用于java web application 的profiler工具。 它不采用JVMPI提供的特性实现监控，
+是一个纯粹的JAVA应用，不依赖于OS，JVM，JDK1.4以上用户都可以使用。
+同时，它还非常易于使用简单的部署好jar包以后，所有的配置都在控制台完成。下面是它的一些特性：
+</p>
+<p>
+<br/>
+<strong>高效:</strong> 
+执行非常高效，几乎不给系统带来更多的开销，目前已经应用于中国电信数个省级大型业务系统。
+</p>
+<p>
+<br/>
+<strong>纯Java实现:</strong> Jwebap是纯java应用，可以方便的部署于JDK14和以上，各种中间件环境。
+</p>
+<p>
+<br/>
+<strong>Plugin架构:</strong>基于plugin架构进行扩展，所有的功能都是通过plugin方式加入，方便按需使用和加载，默认提供Tracer监控插件，完成对J2ee应用的监控，包括，连接池，SQL，方法调用，业务请求等方面。
+</p>
+<p>
+<br/>
+<strong>使用简单:</strong> 部署非常简单，对系统没有任何侵入，只需部署完jar包和web.xml后，一切的配置交给控制台完成。
+</p>
+<p>
+<br/>
+点击此处 <a href="http://sourceforge.net/project/showfiles.php?group_id=210919" style='text-decoration:underline;'><font color=blue>下载</font></a> 
+</p><p>&nbsp;</p>  
+   
+<h1>快速入门</h1>
+<p>
+<br/>
+<h2>第一步：部署</h2>
+<br/> 
+1) 把Jwebap_*.*.*_*.jar放到应用的ClassPath下。如果你是EJB应用并且需要监控EJB的话，需要放到server lib下。 
+2) 把jwebap.xml放到工程web module任意目录中，一般可以放在WebRoot/WEB-INF/目录下。 
+</p>
+<p>
+<br/>
+<h2>第二步：配置</h2>
+</p>
+<p>
+<br/>
+修改你应用的（如果没有的话可以新建一个空的WebModule和EJB放在一个EAR中）web.xml:
+</p>
+<p>
+<br/>增加context-param指定jwebap.xml的路径        
+</p>
+<pre>
+&lt;context-param&gt;
+	&lt;param-name&gt;jwebap-config&lt;/param-name&gt;
+	&lt;param-value&gt;/WEB-INF/jwebap.xml&lt;/param-value&gt;
+&lt;/context-param&gt;
+</pre>
+<p>
+<br/>增加Jwebap启动Listener（建议放在所有Listener之前）
+</p>
+<pre>
+&lt;listener&gt;	
+	&lt;listener-class&gt;org.jwebap.startup.JwebapListener&lt;/listener-class&gt;	
+&lt;/listener&gt;
+</pre>
+<p>
+<br/>为Tracer插件增加Filter
+</p>
+<pre>
+&lt;filter&gt;
+	&lt;filter-name&gt;PageDetectFilter&lt;/filter-name&gt;
+	&lt;filter-class&gt;org.jwebap.plugin.tracer.http.DetectFilter&lt;/filter-class&gt;
+	&lt;init-param&gt;
+		&lt;param-name&gt;excludeUrls&lt;/param-name&gt;
+		&lt;param-value&gt;/detect;/detect/*;*.js;*.jpg;*.htm;*.html;*.gif;*.png;*.css;*.swf&lt;/param-value&gt;
+	&lt;/init-param&gt;
+&lt;/filter&gt;
+&lt;filter-mapping&gt;
+	&lt;filter-name&gt;PageDetectFilter&lt;/filter-name&gt;
+	&lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;
+</pre>
+<p>
+<br/>增加Jwebap控制台Servlet
+</p>
+<pre>
+&lt;servlet&gt;
+	&lt;servlet-name&gt;detect&lt;/servlet-name&gt;
+	&lt;servlet-class&gt;org.jwebap.ui.controler.JwebapServlet&lt;/servlet-class&gt;	
+&lt;/servlet&gt;
+&lt;servlet-mapping&gt;
+	&lt;servlet-name&gt;detect&lt;/servlet-name&gt;
+	&lt;url-pattern&gt;/detect/*&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+</pre>
+
+<p>
+<br/>
+<h2>第三步：启动！</h2>
+</p>
+<p>
+<br/> 
+部署Tracer插件jar包tracer.jar在你应用的类路径下，一般和jwebap的jar包在一起。然后启动应用！如果部署正确的话，输入 JwebapServlet 对应的地址，就可以看到Jwebap控制台。
+</p> 
+<p>
+<br/>
+<h2>第四步：配置tracer插件参数</h2>
+</p>
+<p>
+<br/>
+进入Jwebap控制台，进入deploy菜单，默认已经帮你添加了Tracer插件，不过你还需要根据实际情况配置Tracer插件的参数：
+</p>
+<a href='images/deploy.jpg'><img src='images/deploy.jpg' class='screenshot'/></a>
+<p>
+<br/>
+</p>
+<p>
+<br/>
+点击'Tracer'，点击具体的组件(Component)进行参数配置 :
+</p>
+
+<p>
+<br/><strong>HttpComponent</strong>
+</p>
+<pre>
+&lt;component name="HttpComponent" type="org.jwebap.plugin.http.HttpComponent"&gt;
+	<font color=green>&lt;!--(ms) timings filter's over time --&gt;</font>
+	&lt;property name='trace-filter-active-time'&gt;-1&lt;/property&gt;
+	<font color=green>&lt;!-- max over-time trace size --&gt;</font>
+	&lt;property name='trace-max-size'&gt;1000&lt;/property&gt;
+&lt;/component&gt;
+</pre>
+
+<p>
+<br/><strong>MethodComponent</strong>
+</p>
+<pre>
+&lt;component name="MethodComponent" type="org.jwebap.plugin.method.MethodComponent"&gt;
+	&lt;property name='trace-filter-active-time'&gt;-1&lt;/property&gt;
+	&lt;property name='trace-max-size'&gt;1000&lt;/property&gt;
+	<font color=green>&lt;!--
+		package name and class name that monitored by MethodComponent,
+		e.g.: 'test.*;test.Test' , divided by ';'
+	--&gt;</font>
+	&lt;property name='detect-clazzs'&gt;test.*;&lt;/property&gt;
+&lt;/component&gt;
+</pre>
+
+<p>
+<br/><strong>JdbcComponent</strong>
+</p>
+<pre>
+&lt;component name="JdbcComponent" type="org.jwebap.plugin.jdbc.JdbcComponent"&gt;
+	&lt;property name='trace-filter-active-time'&gt;-1&lt;/property&gt;
+	&lt;property name='trace-max-size'&gt;1300&lt;/property&gt;
+	&lt;property name='connection-listener'&gt;<font color=green>&lt;!--Connection Listener--&gt;</font>
+	org.jwebap.plugin.http.ServletOpenedConnectionListener;
+	org.jwebap.plugin.method.MethodOpenedConnectionListener
+	&lt;/property&gt;
+	<font color=green>&lt;!--
+			1)Local datasource: set your ConnectionManagerClass,
+			or the connection pool 's datasource.  If you have 
+			more than one class ,divided by ';'.
+			c3p0:com.mchange.v2.c3p0.ComboPooledDataSource; 
+			dbcp: org.apache.commons.dbcp.BasicDataSource
+			Also,other class. Jwebap will inject driver-clazzs,and detect any 
+			connection and datasource object it's method renturn.
+			Note:  'driver-clazzs =jdbc driver' is deprecated. Beacause of connection
+			pool, set 'driver-clazzs =jdbc driver', jwebap will find out all connection is leaked.
+			2)JNDI datasource: If your application uses jndi datasource,
+			you can set the class which manages connections in your 
+			application as driver,e.g.: 'com.china.telecom.ConnectionManager'.
+			Else if you use spring to get jndi datasource ,you also can set 
+			driver-clazzs=org.springframework.jndi.JndiObjectFactoryBean.
+			JdbcComponent will inject this class to proxy all connection the class's method return.
+		
+	--&gt;</font>
+	&lt;property name='driver-clazzs'&gt;&lt;/property&gt;
+&lt;/component&gt;
+</pre>
+
+<p>
+<br/><strong>MemCachedComponent</strong>
+</p>
+<pre>
+&lt;component name="MemCachedComponent" type="org.jwebap.plugin.memcached.MemCachedComponent"&gt;
+	&lt;property name='memcached-listener'&gt;
+	org.jwebap.plugin.tracer.http.ServletMemCachedListener;
+	org.jwebap.plugin.tracer.method.MethodMemCachedListener
+	&lt;/property&gt;
+&lt;/component&gt;
+</pre>
+
+<h1>界面截图</h1>
+<p>
+<br/><strong>Jdbc Traces</strong><br/>
+<a href='images/jwebap-jdbc-1.jpg'><img src='images/jwebap-jdbc-1.jpg' class='screenshot' /></a>
+<a href='images/jwebap-jdbc-2.jpg'><img src='images/jwebap-jdbc-2.jpg' class='screenshot' /></a>
+
+<br/><strong>Method Traces</strong><br/>
+<a href='images/jwebap-method.jpg'><img src='images/jwebap-method.jpg' class='screenshot'/></a>
+<p>
+
+<br/><strong>Http Traces</strong><br/>
+<a href='images/jwebap-http.jpg'><img src='images/jwebap-http.jpg' class='screenshot' /></a>
+
+<br/><strong>Deploy</strong><br/>
+<a href='images/deploy.jpg'><img src='images/deploy.jpg' class='screenshot' /></a>
+
+<p align=right>
+<br>
+Please use
+<a href="http://sourceforge.net/forum/?group_id=210919">SourceForge forum</a>
+for reporting any bug, comment or suggestion.
+<br/><br/>
+Power by<a target="_blank" href="http://sourceforge.net" target="_blank"><img src="images/sourceforge.jpg" border="0" /></a>
+
+</p>
+</div>
+
+<!--
+<div id="pied">java.sizeOf is a project of <a href="http://www.incodice.it">InCodice</a> - Design by <a href="http://nicolas.freezee.org">Nicolas Fafchamps</a></div>
+-->
+</div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+	<!-- please copy the following codes to your web.xml configuration -->
+	<!-- jwebap config begin -->
+	<context-param>
+		<param-name>jwebap-config</param-name>
+		<param-value>/WEB-INF/pcwebmonitor.xml</param-value>
+	</context-param>
+	<listener>	
+		<listener-class>org.jwebap.startup.JwebapListener</listener-class>	
+	</listener>
+	<filter>
+		<filter-name>PageDetectFilter</filter-name>
+		<filter-class>org.jwebap.plugin.tracer.http.DetectFilter</filter-class>
+		<init-param>
+			<param-name>excludeUrls</param-name>
+			<param-value>/detect;/detect/*;*.js;*.jpg;*.htm;*.html;*.gif;*.png;*.css;*.swf;*.ico</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>PageDetectFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<servlet>
+		<servlet-name>detect</servlet-name>
+		<servlet-class>org.jwebap.ui.controler.JwebapServlet</servlet-class>	
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>detect</servlet-name>
+		<url-pattern>/detect/*</url-pattern>
+	</servlet-mapping>
+	<!-- jwebap config end -->
